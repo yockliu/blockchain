@@ -29,18 +29,22 @@ type BlockChain struct {
 
 // GenerateBlock generator new block by tx and difficulty
 func (blockChain *BlockChain) GenerateBlock(tx []HashCode, difficulty float32) (*Block, error) {
+	// check the current block
 	if blockChain.Current == nil {
 		return nil, fmt.Errorf("need createion")
 	}
+	current := blockChain.Current
 
+	// calculate merkle root
 	merkleroot, merkleErr := Merkle(tx)
 	if merkleErr != nil {
 		return nil, merkleErr
 	}
 
+	// setup header
 	header := BlockHeader{}
 	header.Version = Version
-	header.Previousblockhash = blockChain.Current.Hash
+	header.Previousblockhash = current.Hash
 	header.Merkleroot = merkleroot
 	header.Timestamp = uint32(time.Now().Unix())
 
@@ -54,15 +58,19 @@ func (blockChain *BlockChain) GenerateBlock(tx []HashCode, difficulty float32) (
 		return nil, hashError
 	}
 
+	// setup new block
 	block := Block{}
-
 	block.Header = header
 	block.Bits = uint64(len(tx))
 	block.Tx = tx
 	block.Hash = hash
 	block.calcuSize()
+	block.Index = current.Index + 1
 
-	blockChain.Current.NextHash = block.Hash
+	// set current's next
+	current.NextHash = block.Hash
+
+	// set current to point to the new block
 	blockChain.Current = &block
 
 	return &block, nil
@@ -94,6 +102,7 @@ func (blockChain *BlockChain) Creation() error {
 	}
 	block.Hash = hash
 	block.Bits = uint64(0)
+	block.Index = 1
 	block.calcuSize()
 
 	blockChain.Current = &block

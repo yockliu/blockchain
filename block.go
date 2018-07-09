@@ -39,7 +39,7 @@ type Block struct {
 	Tx       []HashCode
 	Hash     HashCode
 	NextHash HashCode
-	Height   uint64
+	Index    uint64
 }
 
 const fixedSize = 4 + 80 + 32 + 32 + 8
