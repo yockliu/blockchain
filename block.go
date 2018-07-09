@@ -8,6 +8,8 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/binary"
+
+	"github.com/yockliu/bitcoinlib"
 )
 
 // BlockHeader header of block
@@ -42,8 +44,12 @@ type Block struct {
 	Index    uint64
 }
 
+// 4 (Size, uint32) + 80 (Header, BlockHeader) + 32 (Hash, HashCode) + 32 (Hash, HashCode) + 8 (Index, uint64)
 const fixedSize = 4 + 80 + 32 + 32 + 8
 
 func (block *Block) calcuSize() {
-	block.Size = uint32(fixedSize) + 32*uint32(len(block.Tx))
+	txLength := len(block.Tx)
+	block.Bits = uint64(txLength)
+	csu := bitcoinlib.CompactSizeUint{}
+	block.Size = uint32(fixedSize + csu.Size() + 32*txLength)
 }

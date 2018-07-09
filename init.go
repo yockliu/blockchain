@@ -61,7 +61,6 @@ func (blockChain *BlockChain) GenerateBlock(tx []HashCode, difficulty float32) (
 	// setup new block
 	block := Block{}
 	block.Header = header
-	block.Bits = uint64(len(tx))
 	block.Tx = tx
 	block.Hash = hash
 	block.calcuSize()
@@ -101,7 +100,6 @@ func (blockChain *BlockChain) Creation() error {
 		return errHeaderHash
 	}
 	block.Hash = hash
-	block.Bits = uint64(0)
 	block.Index = 1
 	block.calcuSize()
 

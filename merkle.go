@@ -28,11 +28,11 @@ func Merkle(nodeList []HashCode) (HashCode, error) {
 		}
 
 		// log
-		fmt.Println("----------")
-		for _, element := range nodeList {
-			fmt.Printf("%x", element)
-			fmt.Println()
-		}
+		// fmt.Println("----------")
+		// for _, element := range nodeList {
+		// 	fmt.Printf("%x", element)
+		// 	fmt.Println()
+		// }
 
 		nodeLength = len(nodeList)
 		newNodeList := make([]HashCode, 0, nodeLength/2)
@@ -50,9 +50,7 @@ func Merkle(nodeList []HashCode) (HashCode, error) {
 		nodeList = newNodeList
 	}
 
-	fmt.Println("----------")
-	fmt.Printf("%x", nodeList[0])
-	fmt.Println()
+	fmt.Printf("merkleroot = %x\n", nodeList[0])
 
 	return nodeList[0], nil
 }
