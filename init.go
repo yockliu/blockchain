@@ -6,21 +6,13 @@ package blockchain
 
 import (
 	"fmt"
-	"strings"
 	"time"
+
+	. "github.com/yockliu/bitcoinlib"
 )
 
 // Version version constant
 const Version = uint32(1)
-
-// HashCode sha256 Code 32 byte
-type HashCode [32]byte
-
-func (hash *HashCode) compare(anotherHash *HashCode) int {
-	hexStr := fmt.Sprintf("%x", hash)
-	anotherHexStr := fmt.Sprintf("%x", anotherHash)
-	return strings.Compare(hexStr, anotherHexStr)
-}
 
 // BlockChain block chain element that help to generate block
 type BlockChain struct {

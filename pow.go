@@ -7,6 +7,8 @@ package blockchain
 import (
 	"fmt"
 	"math"
+
+	. "github.com/yockliu/bitcoinlib"
 )
 
 const maxNonce = ^uint32(0)
@@ -35,7 +37,7 @@ func ProfOfWork(header *BlockHeader, difficulty float32) error {
 		if err != nil {
 			continue
 		} else {
-			if hash.compare(&target) < 0 {
+			if hash.Compare(&target) < 0 {
 				// fmt.Printf("hash = %x\n", hash)
 				return nil
 			}

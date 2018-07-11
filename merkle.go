@@ -7,6 +7,8 @@ package blockchain
 import (
 	"crypto/sha256"
 	"fmt"
+
+	. "github.com/yockliu/bitcoinlib"
 )
 
 // Merkle : get merkle tree root

@@ -9,7 +9,7 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 
-	"github.com/yockliu/bitcoinlib"
+	. "github.com/yockliu/bitcoinlib"
 )
 
 // BlockHeader header of block
@@ -50,6 +50,6 @@ const fixedSize = 4 + 80 + 32 + 32 + 8
 func (block *Block) calcuSize() {
 	txLength := len(block.Tx)
 	block.Bits = uint64(txLength)
-	csu := bitcoinlib.CompactSizeUint{}
+	csu := CompactSizeUint{}
 	block.Size = uint32(fixedSize + csu.Size() + 32*txLength)
 }

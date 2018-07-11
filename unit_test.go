@@ -3,6 +3,8 @@ package blockchain
 import (
 	"crypto/sha256"
 	"testing"
+
+	. "github.com/yockliu/bitcoinlib"
 )
 
 func TestBlockChainCreation(t *testing.T) {
