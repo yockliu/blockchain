@@ -12,11 +12,12 @@ import (
 )
 
 // Merkle : get merkle tree root
-func Merkle(nodeList []HashCode) (HashCode, error) {
+func Merkle(nodeList []HashCode) *HashCode {
 
 	// check parameters
 	if len(nodeList) == 0 {
-		return HashCode{}, fmt.Errorf("input is empty")
+		panic("input is empty")
+		return nil
 	}
 
 	// if len is 1, then get the root, else continue calculate
@@ -28,13 +29,6 @@ func Merkle(nodeList []HashCode) (HashCode, error) {
 			lastNode := nodeList[nodeLength-1]
 			nodeList = append(nodeList, lastNode)
 		}
-
-		// log
-		// fmt.Println("----------")
-		// for _, element := range nodeList {
-		// 	fmt.Printf("%x", element)
-		// 	fmt.Println()
-		// }
 
 		nodeLength = len(nodeList)
 		newNodeList := make([]HashCode, 0, nodeLength/2)
@@ -54,5 +48,5 @@ func Merkle(nodeList []HashCode) (HashCode, error) {
 
 	fmt.Printf("merkleroot = %x\n", nodeList[0])
 
-	return nodeList[0], nil
+	return &nodeList[0]
 }

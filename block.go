@@ -5,51 +5,76 @@ package blockchain
  */
 
 import (
-	"bytes"
 	"crypto/sha256"
-	"encoding/binary"
 
 	. "github.com/yockliu/bitcoinlib"
 )
 
-// BlockHeader header of block
-type BlockHeader struct {
-	Version           uint32   // 4 byte
-	Previousblockhash HashCode // 32 byte
-	Merkleroot        HashCode // 32 byte
-	Timestamp         uint32   // 4 byte
-	Difficulty        float32  // 4 byte
-	Nonce             uint32   // 4 byte
+// Block the cell of the block chain
+type Block struct {
+	Cell
+	Version    uint32
+	MHash      *HashCode
+	PrevHash   *HashCode
+	MerkleRoot *HashCode // MerkleRoot of Contents
+	Timestamp  uint32
+	Bits       uint32 // difficulty
+	Nonce      uint32
+	Contents   []Cell
+	NextHash   *HashCode
 }
 
-func (header *BlockHeader) hash() (HashCode, error) {
-	buf := new(bytes.Buffer)
-	err := binary.Write(buf, binary.BigEndian, header)
+// Serialize Serializable
+func (block *Block) Serialize() []byte {
+	header := block.serializeHead()
+	body := block.serializedBody()
+	size := uint32(len(header) + len(body))
 
-	if err != nil {
-		return HashCode{}, err
+	blockBytes := ConcatAppend([][]byte{Uint32ToBytes(size), header, body})
+
+	return blockBytes
+}
+
+func (block *Block) serializeHead() []byte {
+	items := [][]byte{
+		Uint32ToBytes(block.Version),   // version
+		block.PrevHash[:],              // preHash
+		block.MerkleRoot[:],            // merkleRoot
+		Uint32ToBytes(block.Timestamp), // timestamp
+		Uint32ToBytes(block.Bits),      // bits difficulty
+		Uint32ToBytes(block.Nonce),     // nonce
 	}
 
-	return sha256.Sum256(buf.Bytes()), nil
+	data := ConcatAppend(items)
+
+	return data
 }
 
-// Block block of chain
-type Block struct {
-	Size     uint32
-	Header   BlockHeader
-	Bits     uint64
-	Tx       []HashCode
-	Hash     HashCode
-	NextHash HashCode
-	Index    uint64
+func (block *Block) serializedBody() []byte {
+	contentBytes := []byte{}
+
+	contentN := CompactSizeUint{Value: uint64(len(block.Contents))}
+	contentBytes = append(contentBytes, contentN.Bytes()...)
+
+	for _, content := range block.Contents {
+		contentBytes = append(contentBytes, content.Serialize()...)
+	}
+
+	return contentBytes
 }
 
-// 4 (Size, uint32) + 80 (Header, BlockHeader) + 32 (Hash, HashCode) + 32 (Hash, HashCode) + 8 (Index, uint64)
-const fixedSize = 4 + 80 + 32 + 32 + 8
+// Deserialize Serializable
+func (block *Block) Deserialize([]byte) {
+	// TODO
+}
 
-func (block *Block) calcuSize() {
-	txLength := len(block.Tx)
-	block.Bits = uint64(txLength)
-	csu := CompactSizeUint{}
-	block.Size = uint32(fixedSize + csu.Size() + 32*txLength)
+// Hash Hashable
+func (block *Block) Hash() *HashCode {
+	if block.MHash != nil {
+		return block.MHash
+	}
+	bytes := block.Serialize()
+	hash := HashCode(sha256.Sum256(bytes))
+	block.MHash = &hash
+	return block.MHash
 }
