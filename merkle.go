@@ -17,7 +17,6 @@ func Merkle(nodeList []HashCode) *HashCode {
 	// check parameters
 	if len(nodeList) == 0 {
 		panic("input is empty")
-		return nil
 	}
 
 	// if len is 1, then get the root, else continue calculate
