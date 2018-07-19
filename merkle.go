@@ -12,7 +12,7 @@ import (
 )
 
 // Merkle : get merkle tree root
-func Merkle(nodeList []HashCode) *HashCode {
+func Merkle(nodeList []HashCode) HashCode {
 
 	// check parameters
 	if len(nodeList) == 0 {
@@ -47,5 +47,5 @@ func Merkle(nodeList []HashCode) *HashCode {
 
 	fmt.Printf("merkleroot = %x\n", nodeList[0])
 
-	return &nodeList[0]
+	return nodeList[0]
 }

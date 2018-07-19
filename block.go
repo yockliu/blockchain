@@ -15,13 +15,13 @@ type Block struct {
 	Cell
 	Version    uint32
 	MHash      *HashCode
-	PrevHash   *HashCode
-	MerkleRoot *HashCode // MerkleRoot of Contents
+	PrevHash   HashCode
+	MerkleRoot HashCode // MerkleRoot of Contents
 	Timestamp  uint32
 	Bits       uint32 // difficulty
 	Nonce      uint32
 	Contents   []Cell
-	NextHash   *HashCode
+	NextHash   HashCode
 }
 
 // Serialize Serializable
@@ -69,12 +69,12 @@ func (block *Block) Deserialize([]byte) {
 }
 
 // Hash Hashable
-func (block *Block) Hash() *HashCode {
+func (block *Block) Hash() HashCode {
 	if block.MHash != nil {
-		return block.MHash
+		return *block.MHash
 	}
 	bytes := block.Serialize()
 	hash := HashCode(sha256.Sum256(bytes))
 	block.MHash = &hash
-	return block.MHash
+	return *block.MHash
 }

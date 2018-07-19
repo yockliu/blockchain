@@ -5,7 +5,6 @@ package blockchain
  */
 
 import (
-	"fmt"
 	"time"
 
 	. "github.com/yockliu/bitcoinlib"
@@ -16,15 +15,13 @@ const Version = uint32(1)
 
 // BlockChain block chain element that help to generate block
 type BlockChain struct {
-	blocks  []*Block
-	indexes map[string]*Block
+	blocks []*Block
 }
 
 // NewBlockChain new BlockChain
 func NewBlockChain() *BlockChain {
 	blockChain := BlockChain{}
 	blockChain.blocks = []*Block{}
-	blockChain.indexes = map[string]*Block{}
 	return &blockChain
 }
 
@@ -35,12 +32,6 @@ func (blockChain *BlockChain) Current() *Block {
 		return nil
 	}
 	return blockChain.blocks[len-1]
-}
-
-// BlockOfHash get Block by Hash
-func (blockChain *BlockChain) BlockOfHash(hash *HashCode) *Block {
-	hashStr := fmt.Sprintf("%x", hash)
-	return blockChain.indexes[hashStr]
 }
 
 // BlockOfHeight get Block by Height
@@ -55,7 +46,7 @@ func (blockChain *BlockChain) BlockOfHeight(index int) *Block {
 func (blockChain *BlockChain) GenerateBlock(contents []Cell, bits uint32) *Block {
 	// check the current block
 	prevBlock := blockChain.Current()
-	prevHash := &HashCode{}
+	prevHash := HashCode{}
 	if prevBlock != nil {
 		prevHash = prevBlock.Hash()
 	}
@@ -78,13 +69,11 @@ func (blockChain *BlockChain) GenerateBlock(contents []Cell, bits uint32) *Block
 	}
 
 	blockChain.blocks = append(blockChain.blocks, &block)
-	hashStr := fmt.Sprintf("%x", currentHash)
-	blockChain.indexes[hashStr] = &block
 
 	return &block
 }
 
-func merkle(contents []Cell) *HashCode {
+func merkle(contents []Cell) HashCode {
 	nodeList := []HashCode{}
 	for _, content := range contents {
 		nodeList = append(nodeList, *content.Hash())
