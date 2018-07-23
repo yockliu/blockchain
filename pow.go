@@ -6,6 +6,7 @@ package blockchain
 
 import (
 	"fmt"
+	"runtime"
 
 	. "github.com/yockliu/bitcoinlib"
 )
@@ -30,11 +31,14 @@ func ProfOfWork(block *Block) error {
 	for nonce := uint32(0); nonce < maxNonce; nonce++ {
 		block.Nonce = nonce
 		hash := block.Hash()
+		// fmt.Printf("hash = %x\n", hash)
 		if hash.Compare(&target) < 0 {
 			// fmt.Printf("hash = %x\n", hash)
 			return nil
 		}
+
+		runtime.Gosched()
 	}
 
-	return fmt.Errorf("not found result")
+	return fmt.Errorf("ProfOfWork Not found result")
 }

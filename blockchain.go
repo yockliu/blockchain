@@ -34,6 +34,11 @@ func (blockChain *BlockChain) Current() *Block {
 	return blockChain.blocks[len-1]
 }
 
+// Height the height of the blockchain
+func (blockChain *BlockChain) Height() int {
+	return len(blockChain.blocks)
+}
+
 // BlockOfHeight get Block by Height
 func (blockChain *BlockChain) BlockOfHeight(index int) *Block {
 	if index < 0 || index >= len(blockChain.blocks) {

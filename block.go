@@ -14,7 +14,6 @@ import (
 type Block struct {
 	Cell
 	Version    uint32
-	MHash      *HashCode
 	PrevHash   HashCode
 	MerkleRoot HashCode // MerkleRoot of Contents
 	Timestamp  uint32
@@ -70,11 +69,7 @@ func (block *Block) Deserialize([]byte) {
 
 // Hash Hashable
 func (block *Block) Hash() HashCode {
-	if block.MHash != nil {
-		return *block.MHash
-	}
 	bytes := block.Serialize()
 	hash := HashCode(sha256.Sum256(bytes))
-	block.MHash = &hash
-	return *block.MHash
+	return hash
 }

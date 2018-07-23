@@ -6,7 +6,6 @@ package blockchain
 
 import (
 	"crypto/sha256"
-	"fmt"
 
 	. "github.com/yockliu/bitcoinlib"
 )
@@ -45,7 +44,7 @@ func Merkle(nodeList []HashCode) HashCode {
 		nodeList = newNodeList
 	}
 
-	fmt.Printf("merkleroot = %x\n", nodeList[0])
+	// fmt.Printf("merkleroot = %x\n", nodeList[0])
 
 	return nodeList[0]
 }
